@@ -53,7 +53,7 @@
         <commons-io.version>2.18.0</commons-io.version>
         <jtokkit.version>1.1.0</jtokkit.version>
 
-        <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
     </properties>
 

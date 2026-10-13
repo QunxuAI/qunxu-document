@@ -192,12 +192,12 @@ java -cp "target/classes:$(cat target/cp.txt)" tech.qunxu.module.document.tool.D
 
 ## 文档
 
-- [配置参考](docs/configuration.md)
-- [分块与导出](docs/chunking.md)
-- [已知限制](docs/limitations.md)
-- [依赖与构建可复现性](docs/dependencies.md)
-- [未来路线图（中文版）](docs/roadmap.zh-CN.md)
-- [变更日志（中文版）](CHANGELOG.zh-CN.md)
+- [配置参考](docs/configuration.md) · [English](docs/configuration.en.md)
+- [分块与导出](docs/chunking.md) · [English](docs/chunking.en.md)
+- [已知限制](docs/limitations.md) · [English](docs/limitations.en.md)
+- [依赖与构建可复现性](docs/dependencies.md) · [English](docs/dependencies.en.md)
+- [未来路线图](docs/roadmap.md) · [English](docs/roadmap.en.md)
+- [变更日志](CHANGELOG.md) · [English](CHANGELOG.en.md)
 
 ## License
 

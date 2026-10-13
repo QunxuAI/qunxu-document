@@ -1,41 +1,43 @@
-# Chunking & exporters
+# 分块与导出
 
-## Chunkers
+英文版：[chunking.en.md](chunking.en.md)
 
-All chunkers are registered in `ChunkerRegistry` and keyed by name. Names are case-insensitive and legacy aliases
-(Spring AI splitter names) map to the same implementation with identical output.
+## 分块器
 
-| Key | Class | Strategy | Legacy aliases |
+所有分块器注册在 `ChunkerRegistry`，以名字为键。名字大小写不敏感；旧分割器别名（Spring AI splitter 名字）
+映射到同一实现且分段结果不变。
+
+| Key | 类 | 策略 | 旧别名 |
 | --- | --- | --- | --- |
-| `hierarchical` | `HierarchicalChunker` | split by heading structure; each chunk carries the heading breadcrumb path | `HierarchicalChunker`, `MarkdownHeaderSplitter` |
-| `table-row` | `TableRowChunker` | each `TABLE` chunked independently by rows (≤ `rowsPerChunk` **and** token budget); sheet name + headers repeated per chunk so each chunk is self-contained | `ExcelDocumentSplitter`, `TableRowChunker` |
-| `flat` | `FlatChunker` | character-window splitting | `SimpleDocumentSplitter`, `FlatChunker` |
-| `flat` (regex) | `FlatChunker` | split on a regex separator (e.g. blank lines) | `RegexDocumentSplitter` |
-| `AutoChunker` (or empty name) | auto-selection | headings → `hierarchical`; pure tables → `table-row`; plain text → flat (chars) | |
+| `hierarchical` | `HierarchicalChunker` | 按标题结构分块；每块携带标题面包屑路径 | `HierarchicalChunker`、`MarkdownHeaderSplitter` |
+| `table-row` | `TableRowChunker` | 每个 `TABLE` 独立按行分块（≤ `rowsPerChunk` **且** ≤ token 预算）；Sheet 名 + 表头逐块重复，保证每块自包含 | `ExcelDocumentSplitter`、`TableRowChunker` |
+| `flat` | `FlatChunker` | 字符窗口切分 | `SimpleDocumentSplitter`、`FlatChunker` |
+| `flat`（正则） | `FlatChunker` | 按正则分隔符切分（如空行） | `RegexDocumentSplitter` |
+| `AutoChunker`（或空名） | 自动选型 | 有标题 → `hierarchical`；纯表格 → `table-row`；纯文本 → flat（字符） | |
 
-### Usage
+### 用法
 
 ```java
-ChunkerRegistry registry = ...; // auto-configured bean, or new ChunkerRegistry(List.of(...))
-ChunkOptionsFactory factory = new ChunkOptionsFactory(properties); // or ChunkOptions.of(...)
+ChunkerRegistry registry = ...; // 自动配置 Bean，或 new ChunkerRegistry(List.of(...))
+ChunkOptionsFactory factory = new ChunkOptionsFactory(properties); // 或 ChunkOptions.of(...)
 
 List<Chunk> chunks = registry.chunk("AutoChunker", document,
         factory.create(maxTokens /*512*/, minTokens /*128*/, rowsPerChunk /*10*/, regexSeparator /*null*/, strategy /*null*/));
 ```
 
-- Token budget is measured with `JTokkitTokenCounter` (CL100K_BASE) — the same tokenizer family Spring AI's
-  `TokenCountBatchingStrategy` uses, so chunk sizes stay under embedding limits.
-- Chunks below `minTokens` are merged into the previous chunk to avoid retrieval-dead fragments.
-- `include-heading-breadcrumb=true` (default) prepends e.g. `> 第一章 / 1.2 小节` to each chunk.
+- token 预算经 `JTokkitTokenCounter`（CL100K_BASE）计量——与 Spring AI 的
+  `TokenCountBatchingStrategy` 同一 tokenizer 家族，分块大小不会超 embedding 上限。
+- 低于 `minTokens` 的块并入前一块，避免产生检索不到的碎片。
+- `include-heading-breadcrumb=true`（默认）会在块首注入如 `> 第一章 / 1.2 小节`。
 
-## Exporters
+## 导出器
 
-| Key | Class | Output |
+| Key | 类 | 输出 |
 | --- | --- | --- |
-| `markdown` | `MarkdownExporter` | ATX headings, lists, code fences, tables as pipe tables, image links |
-| `html` | `HtmlExporter` | semantic HTML |
-| `text` | `TextExporter` | plain text |
-| `json` | `JsonExporter` | the full `QunxuDocument` dict — round-trippable via `QunxuDocument.fromJson(...)` |
+| `markdown` | `MarkdownExporter` | ATX 标题、列表、代码围栏、管道表格、图片链接 |
+| `html` | `HtmlExporter` | 语义化 HTML |
+| `text` | `TextExporter` | 纯文本 |
+| `json` | `JsonExporter` | 完整 `QunxuDocument` dict——可经 `QunxuDocument.fromJson(...)` 往返还原 |
 
 ```java
 QunxuDocument document = result.getDocument();
@@ -43,11 +45,11 @@ String markdown = document.exportAsMarkdown();
 String html      = document.exportAsHtml();
 String text      = document.exportAsText();
 String json      = document.toJson();
-QunxuDocument back = QunxuDocument.fromJson(json); // cache / storage round-trip
+QunxuDocument back = QunxuDocument.fromJson(json); // 缓存 / 存储往返
 ```
 
-## Extending
+## 扩展
 
-- **New chunker**: implement `BaseChunker` and register a bean; it is picked up by the auto-configured
-  `ChunkerRegistry` (`@ConditionalOnMissingBean` semantics).
-- **New exporter**: implement `DocumentExporter` and register a bean, or call `converter.registerExporter(...)`.
+- **新分块器**：实现 `BaseChunker` 并注册为 Bean；自动配置的 `ChunkerRegistry` 会收集它
+  （`@ConditionalOnMissingBean` 语义）。
+- **新导出器**：实现 `DocumentExporter` 并注册为 Bean，或调用 `converter.registerExporter(...)`。

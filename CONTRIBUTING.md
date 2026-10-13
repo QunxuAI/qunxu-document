@@ -1,53 +1,53 @@
-# Contributing to qunxu-document
+# 参与贡献（qunxu-document）
 
-Thanks for considering a contribution! Please read the [Code of Conduct](CODE_OF_CONDUCT.md) first.
+感谢考虑为本项目做贡献！请先阅读[行为准则](CODE_OF_CONDUCT.md)。
 
-## How to contribute
+英文版：[CONTRIBUTING.en.md](CONTRIBUTING.en.md)
 
-1. **Open an issue** for a bug or feature before writing code (especially new backends / chunkers — design matters here).
-2. Fork the repo and create a feature branch (`feat/...`, `fix/...`).
-3. Make your change with tests.
-4. Open a pull request against `main`.
+## 如何贡献
 
-## Development environment
+1. 写代码前先开 **issue** 讨论 bug 或新功能（尤其是新后端 / 新分块器——这些涉及设计）。
+2. Fork 仓库并创建特性分支（`feat/...`、`fix/...`）。
+3. 带着测试完成改动。
+4. 向 `main` 发起 Pull Request。
 
-- JDK 21+ (bytecode targets Java 21)
+## 开发环境
+
+- JDK 21+（字节码目标 Java 21）
 - Maven 3.9+
 
 ```bash
-mvn verify          # compiles + runs all tests
+mvn verify          # 编译 + 跑全部测试
 ```
 
-The module has a **69-check self-check** (`DocumentSampleRunner.runSelfCheck()`) that generates real samples
-(docx/pptx/xlsx/pdf/md/csv) and asserts the full pipeline. The JUnit test
-`DocumentSampleRunnerTest.selfCheckCountIsStable` pins the count to 69 — **if you add capability, you must add
-corresponding assertions and update that number**. This is deliberate: it prevents silent regressions.
+模块内置 **69 项自检**（`DocumentSampleRunner.runSelfCheck()`），会生成真实样本（docx/pptx/xlsx/pdf/md/csv）
+并断言整条链路。JUnit 测试 `DocumentSampleRunnerTest.selfCheckCountIsStable` 把检查数钉在 69——
+**新增能力必须同步新增对应断言并更新该数字**。这是刻意的：防止静默回归。
 
-## Coding conventions
+## 编码约定
 
-- Follow the existing style (4-space indent, same as `.editorconfig`).
-- `pom.xml` is Java 21 + Spring Boot 4 autoconfigure; don't add framework starters unless required.
-- Keep the library **Spring-optional**: core classes must remain plain Java.
-- Don't add `@Component`; wire new beans through `DocumentAutoConfiguration` with `@ConditionalOnMissingBean`
-  so hosts can override via SPI.
-- New formats = new `DocumentBackend`; new outputs = new `DocumentExporter`; new splits = new `BaseChunker`.
-  Register each in `DocumentAutoConfiguration` and extend the self-check.
+- 遵循现有风格（4 空格缩进，与 `.editorconfig` 一致）。
+- `pom.xml` 是 Java 21 + Spring Boot 4 自动配置；除非必要，不要引入框架 starter。
+- 保持库 **Spring 可选**：核心类必须是纯 Java。
+- 不要加 `@Component`；新 Bean 经 `DocumentAutoConfiguration` 以 `@ConditionalOnMissingBean` 装配，
+  让宿主能经 SPI 覆盖。
+- 新格式 = 新 `DocumentBackend`；新输出 = 新 `DocumentExporter`；新切分 = 新 `BaseChunker`。
+  每个都要注册进 `DocumentAutoConfiguration` 并扩展自检。
 
-## Adding a new document format (typical flow)
+## 新增一种文档格式（典型流程）
 
-1. Implement `DocumentBackend` (see `MsWordDocumentBackend` or `TabularDocumentBackend` for the pattern —
-   convert to `QunxuDocument` typed nodes with page/bbox provenance where possible).
-2. Register it in `DocumentAutoConfiguration`.
-3. Add a generated sample to `SampleDocumentFactory` and route assertions to the self-check.
-4. Document the format in `README.md`'s supported-formats table.
+1. 实现 `DocumentBackend`（参考 `MsWordDocumentBackend` 或 `TabularDocumentBackend` 的模式——
+   尽量转成带页码/bbox 溯源的类型化 `QunxuDocument` 节点）。
+2. 在 `DocumentAutoConfiguration` 注册。
+3. 在 `SampleDocumentFactory` 加一个合成样本，并把断言加进自检。
+4. 在 `README.md` 的支持格式表里补充说明。
 
-## Commit & PR guidelines
+## 提交与 PR 规范
 
-- Write focused commits; one logical change per PR.
-- PR title should summarize the change; mention issue numbers.
-- CI runs `mvn verify` — make sure it's green.
+- 提交聚焦单一逻辑变更；一个 PR 只做一件事。
+- PR 标题概括改动；提及关联 issue 号。
+- CI 会跑 `mvn verify`——确保它是绿的。
 
-## License
+## 许可证
 
-By contributing, you agree that your contributions are licensed under [Apache License 2.0](LICENSE)
-(the project license) without additional terms.
+通过贡献，你同意你的贡献以项目许可证 [Apache License 2.0](LICENSE) 授权，不附加额外条款。

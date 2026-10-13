@@ -112,7 +112,7 @@ The project is split into three Maven artifacts (mirroring docling-java's `docli
 
 > The structured-PDF backend (`opendataloader-pdf-core`) is not on Maven Central yet — the POM declares the
 > [JitPack](https://jitpack.io) repository so it resolves from the upstream GitHub source automatically.
-> See [docs/dependencies.md](docs/dependencies.md) if your environment forbids third-party build repositories.
+> See [docs/dependencies.en.md](docs/dependencies.en.md) if your environment forbids third-party build repositories.
 
 ### 2. Use it (Spring Boot)
 
@@ -174,7 +174,7 @@ java -cp "target/classes:$(cat target/cp.txt)" tech.qunxu.module.document.tool.D
 | `qunxu.document.cache.enabled` | `true` | parse-result cache |
 | `qunxu.document.chunk.max-tokens` | `7000` | per-chunk token budget |
 
-Full reference: [docs/configuration.md](docs/configuration.md).
+Full reference: [docs/configuration.en.md](docs/configuration.en.md).
 
 ## Extension points (SPI)
 
@@ -202,11 +202,12 @@ Report vulnerabilities via [SECURITY.md](SECURITY.md).
 
 ## Documentation
 
-- [Configuration reference](docs/configuration.md)
-- [Chunking & exporters](docs/chunking.md)
-- [Known limitations](docs/limitations.md)
-- [Dependencies & build reproducibility](docs/dependencies.md)
-- [Roadmap](docs/roadmap.md)
+- [Configuration reference](docs/configuration.en.md) · [中文](docs/configuration.md)
+- [Chunking & exporters](docs/chunking.en.md) · [中文](docs/chunking.md)
+- [Known limitations](docs/limitations.en.md) · [中文](docs/limitations.md)
+- [Dependencies & build reproducibility](docs/dependencies.en.md) · [中文](docs/dependencies.md)
+- [Roadmap](docs/roadmap.en.md) · [中文](docs/roadmap.md)
+- [Changelog](CHANGELOG.en.md) · [中文](CHANGELOG.md)
 
 ## License
 

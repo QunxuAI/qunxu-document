@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>tech.qunxu</groupId>
+        <artifactId>qunxu-document</artifactId>
+        <version>0.1.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>qunxu-document-bom</artifactId>
+    <packaging>pom</packaging>
+    <name>qunxu-document-bom</name>
+    <description>Bill of Materials for qunxu-document. Import this (scope=import) to get all qunxu-document artifact versions managed in one place — the same pattern as spring-boot-dependencies / jackson-bom / docling-bom. Contains no code.</description>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>tech.qunxu</groupId>
+                <artifactId>qunxu-document-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>tech.qunxu</groupId>
+                <artifactId>qunxu-document-spring-boot-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

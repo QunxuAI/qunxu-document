@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>tech.qunxu</groupId>
+    <artifactId>qunxu-document</artifactId>
+    <version>0.1.0</version>
+    <packaging>pom</packaging>
+
+    <name>qunxu-document</name>
+    <description>Docling-style document parsing library: format-specific backends (POI / PDFBox / Tika / OpenDataLoader) -&gt; unified QunxuDocument model -&gt; Markdown/HTML/JSON/Text export -&gt; chunking. Multi-module: qunxu-document-core (pure Java) + qunxu-document-spring-boot-starter (Spring Boot autoconfigure).</description>
+    <url>https://github.com/qunxu-ai/qunxu-document</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Qunxu AI</name>
+            <email>opensource@qunxu.ai</email>
+            <organization>Qunxu AI</organization>
+            <organizationUrl>https://qunxu.ai</organizationUrl>
+        </developer>
+    </developers>
+
+    <modules>
+        <module>qunxu-document-core</module>
+        <module>qunxu-document-spring-boot-starter</module>
+        <module>qunxu-document-bom</module>
+    </modules>
+
+    <properties>
+        <java.version>21</java.version>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Spring Boot 4（仅使用 spring-boot-autoconfigure 装配库，不依赖 web/DB/Spring AI） -->
+        <spring.boot.version>4.1.1</spring.boot.version>
+        <!-- 以下依赖版本不在 spring-boot-dependencies BOM 中，由本工程显式管理 -->
+        <fastjson2.version>2.0.65</fastjson2.version>
+        <hutool.version>5.8.47</hutool.version>
+        <poi.version>5.5.1</poi.version>
+        <pdfbox.version>3.0.8</pdfbox.version>
+        <tika.version>3.3.2</tika.version>
+        <opendataloader.version>2.5.12</opendataloader.version>
+        <commons-io.version>2.18.0</commons-io.version>
+        <jtokkit.version>1.1.0</jtokkit.version>
+
+        <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- 不在 BOM 中的库版本（core 模块使用） -->
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${fastjson2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-scratchpad</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.pdfbox</groupId>
+                <artifactId>pdfbox</artifactId>
+                <version>${pdfbox.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tika</groupId>
+                <artifactId>tika-core</artifactId>
+                <version>${tika.version}</version>
+            </dependency>
+            <!-- tika-core 不含任何解析器，parseToString 对真实文件恒返回空串；必须引入 parsers 标准包 -->
+            <dependency>
+                <groupId>org.apache.tika</groupId>
+                <artifactId>tika-parsers-standard-package</artifactId>
+                <version>${tika.version}</version>
+            </dependency>
+            <!-- OpenDataLoader PDF 结构化解析。注意：该构件（org.opendataloader:opendataloader-pdf-core）暂未发布到
+                 Maven Central，由 JitPack 从上游 GitHub 标签（Apache-2.0）构建分发，故本工程声明了 jitpack.io 仓库。
+                 上游发布到 Central 后即可移除该仓库并换回官方坐标。 -->
+            <dependency>
+                <groupId>com.github.opendataloader-project.opendataloader-pdf</groupId>
+                <artifactId>opendataloader-pdf-core</artifactId>
+                <version>${opendataloader.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
+            <!-- token 预算估算：与 Spring AI TokenCountBatchingStrategy 同用 CL100K_BASE，保证分块不超 embedding 上限 -->
+            <dependency>
+                <groupId>com.knuddels</groupId>
+                <artifactId>jtokkit</artifactId>
+                <version>${jtokkit.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <repositories>
+        <!-- OpenDataLoader PDF 构件暂未发布到 Central，由 JitPack 从 GitHub 源码构建分发（见 opendataloader-pdf-core 注释） -->
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <release>${java.version}</release>
+                    <parameters>true</parameters>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>

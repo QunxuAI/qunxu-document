@@ -1,0 +1,23 @@
+# Maven
+target/
+*.class
+.flattened-pom.xml
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Self-check output
+qunxu-document-selfcheck/

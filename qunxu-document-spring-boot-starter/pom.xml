@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>tech.qunxu</groupId>
+        <artifactId>qunxu-document</artifactId>
+        <version>0.1.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>qunxu-document-spring-boot-starter</artifactId>
+    <name>qunxu-document-spring-boot-starter</name>
+    <description>Spring Boot autoconfiguration for qunxu-document. Wires the pure-Java core beans (converter, backends, exporters, chunkers, cache, OCR gate) via META-INF/spring AutoConfiguration.imports. Add this to a Spring Boot 4 application; plain-Java consumers use qunxu-document-core instead.</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>tech.qunxu</groupId>
+            <artifactId>qunxu-document-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- 自动配置与 @ConfigurationProperties（不依赖 web/数据库，由 BOM 管理版本） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+
+        <!-- 测试：ApplicationContextRunner 装配冒烟测试 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

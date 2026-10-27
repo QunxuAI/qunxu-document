@@ -42,7 +42,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Spring Boot 4（仅使用 spring-boot-autoconfigure 装配库，不依赖 web/DB/Spring AI） -->
-        <spring.boot.version>4.1.1</spring.boot.version>
+        <spring.boot.version>4.1.2</spring.boot.version>
         <!-- 以下依赖版本不在 spring-boot-dependencies BOM 中，由本工程显式管理 -->
         <fastjson2.version>2.0.65</fastjson2.version>
         <hutool.version>5.8.47</hutool.version>
